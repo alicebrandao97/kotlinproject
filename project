@@ -80,3 +80,32 @@ class EstoqueViewModel : ViewModel() {
         _produtos.value = _produtos.value + produto
     }
 }
+
+// Desenvolvimento, Gerenciamento de Estado
+class EstoqueViewModel : ViewModel() {
+    private val _produtos = MutableStateFlow<List<Produto>>(emptyList())
+    val produtos: StateFlow<List<Produto>> = _produtos
+
+    fun adicionarProduto(produto: Produto) {
+        _produtos.value = _produtos.value + produto
+    }
+
+    fun exportarDadosParaCSV() {
+        val fileName = "estoque_hering.csv"
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), fileName)
+
+        try {
+            val writer = FileWriter(file)
+            writer.append("Nome,Quantidade\n")
+            for (produto in _produtos.value) {
+                writer.append("${produto.nome},${produto.quantidade}\n")
+            }
+            writer.flush()
+            writer.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+}
+
+data class Produto(val nome: String, val quantidade: Int)
