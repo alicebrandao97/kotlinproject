@@ -109,3 +109,31 @@ class EstoqueViewModel : ViewModel() {
 }
 
 data class Produto(val nome: String, val quantidade: Int)
+
+
+// Testes Locais - Testes simulados para cadastro, exibição e validação de entradas
+fun testesSimulados() {
+    val viewModel = EstoqueViewModel()
+
+    // Teste 1: Cadastro válido
+    val produtoValido = Produto("Camiseta Básica", 10)
+    viewModel.adicionarProduto(produtoValido)
+    assert(viewModel.produtos.value.contains(produtoValido))
+
+    // Teste 2: Cadastro com nome vazio
+    val produtoInvalido1 = Produto("", 5)
+    viewModel.adicionarProduto(produtoInvalido1)
+    assert(!viewModel.produtos.value.contains(produtoInvalido1)) // Fails no controle UI
+
+    // Teste 3: Cadastro com quantidade zero
+    val produtoInvalido2 = Produto("Calça Jeans", 0)
+    viewModel.adicionarProduto(produtoInvalido2)
+    assert(!viewModel.produtos.value.contains(produtoInvalido2)) // Fails no controle UI
+
+    // Teste 4: Verificação de exibição (simulado)
+    viewModel.produtos.value.forEach {
+        println("Produto: ${it.nome}, Quantidade: ${it.quantidade}")
+    }
+
+    println("Testes finalizados.")
+}
